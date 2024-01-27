@@ -5,3 +5,4 @@ inventory.sh - create an inventory file for each system
 pii.sh - search for pii on the system
 webshell.sh - search for webshells
 sqldump.sh - dump mysql
+ssh.sh - secure ssh automatically
