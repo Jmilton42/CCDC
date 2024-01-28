@@ -34,9 +34,12 @@ check_csv_fields() {
 
 # Function to add a user to a group
 add_user_to_group() {
-    if id -nG "$1" | grep -qw "$2"; then
-        pw groupmod $2 -m $1
-        log "Added user $1 to group $2"
+    if id -nG "$1" | grep -qwv "$2"; then
+        # Check if group exists
+        if getent group $2 | grep -qw $2; then
+            pw groupmod $2 -m $1
+            log "Added user $1 to group $2"
+        fi
     fi
 }
 
@@ -50,7 +53,7 @@ remove_user_from_group() {
 
 # Function to set the user's password and shell
 set_user_password() {
-    echo "$1:$2" | chpass
+    echo "$2" | pw mod user $1 -h 0 2>/dev/null
     log "Found user $1 with UID $3 and changed password"
 }
 
@@ -64,29 +67,27 @@ check_file "passwords.csv"
 check_csv_fields "passwords.csv" 3
 
 # Loop through every user in /etc/passwd 
-for u in $(dscl . -list /Users | grep -v '^_'); do
+for u in $(getent passwd | cut -d: -f1); do
     # Get username, UID, and login shell from /etc/passwd
-    username=$(id -un $u)
-    uid=$(id -u $u)
-    shell=$(dscl . -read /Users/$u UserShell | awk '{print $2}')
+    username=$(getent passwd $u | cut -d: -f1)
+    uid=$(getent passwd $u | cut -d: -f3)
+    shell=$(getent passwd $u | cut -d: -f7)
 
-    # Skip if the user is root or does not have a valid login shell
-    if [ "$username" == "root" ] || [[ ! "$shell" =~ ^/bin/.*sh$ ]]; then
+    # Check if user is root or shell does not match ^/bin/.*sh$
+    if echo "$username" | grep -q "^root$" || ! echo "$shell" | grep -q "^/bin/.*sh$"; then
         continue
     fi
 
-    # Check if the user is in passwords.csv
-    if grep -q "^$username," passwords.csv; then
-        # Get password and admin status from passwords.csv
-        password=$(grep "^$username," passwords.csv | cut -d, -f2 | tr -d '\r')
-        admin=$(grep "^$username," passwords.csv | cut -d, -f3 | tr -d '\r')
-
-        # Set the user's password and shell
-        set_user_password $username $password $uid
-
+    # Check if user is in passwords.csv 
+    if grep -qw "$username" "passwords.csv"; then
+        # Get password and group from passwords.csv
+        password=$(grep "$username" "passwords.csv" | cut -d, -f2)
+        admin=$(grep "$username" "passwords.csv" | cut -d, -f3)
+        
+        set_user_password "$username" "$password" "$uid"
         # Add or remove the user from admin groups as necessary
         for group in adm admin lpadmin sambashare sudo wheel; do
-            if [ "$admin" == "admin" ]; then
+            if echo "$admin" | grep -q "admin"; then
                 add_user_to_group $username $group
             else
                 remove_user_from_group $username $group
@@ -94,7 +95,7 @@ for u in $(dscl . -list /Users | grep -v '^_'); do
         done
     else
         # Lock user account and remove from all groups
-        passwd -l $username
+        pw lock $username
         log "Found user $username with UID $uid and locked account"
         for group in adm admin lpadmin sambashare sudo wheel; do
             remove_user_from_group $username $group
