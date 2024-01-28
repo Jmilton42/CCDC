@@ -1,0 +1,9 @@
+User,Password,IsAdmin
+bob,password123,normal
+alice,password123,admin
+Administrator,N/A,admin
+DefaultAccount,N/A,normal
+dunla,N/A,normal
+etand,N/A,normal
+Guest,N/A,normal
+WDAGUtilityAccount,N/A,normal
