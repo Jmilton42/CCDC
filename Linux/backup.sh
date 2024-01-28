@@ -3,12 +3,12 @@
 backup_folder="/root/backup"
 shadow_file="/etc/shadow"
 passwd_file="/etc/passwd"
-groups_file="/etc/groups"
+groups_file="/etc/group"
 sshd_config_file="/etc/ssh/ssh_config"
 sudoers_file="/etc/sudoers"
 sudoers_d_file="/etc/sudoers.d"
 nginx_file="/etc/nginx"
-apache_file="/etc/apache"
+apache_file="/etc/apache2"
 www_file="/var/www"
 
 # Checks to see if the script needs to be with sudo
@@ -28,9 +28,9 @@ cp "$passwd_file" "$backup_folder"
 cp "$groups_file" "$backup_folder"
 cp "$sshd_config_file" "$backup_folder"
 cp "$sudoers_file" "$backup_folder"
-cp "$sudoers_d_file" "$backup_folder"
-cp "$nginx_file" "$backup_folder"
-cp "$apache_file" "$backup_folder"
-cp "$www_file" "$backup_folder"
+cp -r "$sudoers_d_file" "$backup_folder"
+cp -r "$nginx_file" "$backup_folder"
+cp -r "$apache_file" "$backup_folder"
+cp -r "$www_file" "$backup_folder"
 
 
