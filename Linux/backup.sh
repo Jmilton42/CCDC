@@ -6,10 +6,10 @@ passwd_file="/etc/passwd"
 groups_file="/etc/groups"
 sshd_config_file="/etc/ssh/ssh_config"
 sudoers_file="/etc/sudoers"
-sudoers_d_file="/etc/sudoers.d/*"
-nginx_file="/etc/nginx/*"
-apache_file="/etc/apache/*"
-www_file="/var/www/*"
+sudoers_d_file="/etc/sudoers.d"
+nginx_file="/etc/nginx"
+apache_file="/etc/apache"
+www_file="/var/www"
 
 # Checks to see if the script needs to be with sudo
 if [ "$EUID" -ne 0 ]; then
