@@ -9,6 +9,7 @@ sudoers_file="/etc/sudoers"
 sudoers_d_file="/etc/sudoers.d"
 nginx_file="/etc/nginx"
 apache_file="/etc/apache2"
+httpd_file="/etc/httpd"
 www_file="/var/www"
 
 # Checks to see if the script needs to be with sudo
@@ -31,6 +32,7 @@ cp "$sudoers_file" "$backup_folder"
 cp -r "$sudoers_d_file" "$backup_folder"
 cp -r "$nginx_file" "$backup_folder"
 cp -r "$apache_file" "$backup_folder"
+cp -r "$httpd_file" "$backup_folder"
 cp -r "$www_file" "$backup_folder"
 
 
