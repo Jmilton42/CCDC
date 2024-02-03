@@ -151,9 +151,9 @@ if ($chooseLocal -eq "1"){
                 "{0},{1}" -f $element,"N/A" | add-content -path $file
             }
 
-            #if no then remove them from the system
+            #if no then disable them from the system
             else{
-                Remove-LocalUser $element
+                Disable-LocalUser $element
                 write-host "SUCCESSFULLY:" -foreground green -NoNewline
                 write-host " removed"$element
             }
@@ -191,6 +191,7 @@ elseif($chooseLocal -eq "2"){
 
                 Add-ADGroupMember -Identity $response -Members $i.User | Out-Null
                 write-host $i.User " has been promoted to $response."
+                
             }
         }
 
@@ -296,9 +297,9 @@ elseif($chooseLocal -eq "2"){
 
             #if no then remove them from the system
             else{
-                Remove-LocalUser $element
-                write-host "SUCCESSFULLY:" -foreground green -NoNewline
-                write-host " removed"$element
+                Disable-ADAccount -Identity $element
+                write-host "`nSUCCESSFULLY:" -foreground green -NoNewline
+                write-host " disabled"$element
             }
         }
     }
