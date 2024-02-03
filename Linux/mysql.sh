@@ -21,7 +21,7 @@ mkdir -p "$DUMP_DIR"
 
 echo "dumping all databases"
 
-mysql -u $username -p$pass --all-databases > "$DUMP_DIR/all_databases.sql"
+mysqldump -u $username -p$pass --all-databases > "$DUMP_DIR/all_databases.sql"
 
 echo "Would you like to install MySQL Workbench?"
 read choice
