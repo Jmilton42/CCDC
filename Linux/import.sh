@@ -4,7 +4,7 @@ echo "Username:"
 read username
 
 echo "Password:"
-read pass
+read -s pass
 
 DUMP_DIR="/root/backups/sql"
 
