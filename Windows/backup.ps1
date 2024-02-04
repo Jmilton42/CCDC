@@ -6,9 +6,19 @@ $pass = Read-Host "Password" -AsSecureString
 if (-not (Get-Command "mysql" -ErrorAction SilentlyContinue)) {
 	Write-Host "MySQL is not insalled, installing it now."
 
-	# Install MySQL
-	Start-Process -Filepath "apt" -ArgumentList "update" -Wait
-	Start-Process -Filepath "apt" -ArgumentList "install", "-y", "mysql-server" -Wait
+	# Install Chocolatey (if not already installed)
+	if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+	    Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+	}
+	
+	# Install MySQL Server using Chocolatey
+	choco install mysql -y
+	
+	# Start MySQL service
+	Start-Service MySQL
+	
+	# Display MySQL service status
+	Get-Service MySQL
 }
 else {
 	# Get MySQL Version
@@ -27,6 +37,9 @@ Write-Host "Dumping all databases"
 # Prompt to install MySQL Workbench
 $choice = Read-Host "Would you like to install MySQL Workbench? (yes/no)"
 if ($choice -eq "yes") {
-    Start-Process -FilePath "apt" -ArgumentList "update" -Wait
-    Start-Process -FilePath "apt" -ArgumentList "install", "mysql-workbench" -Wait
+	# Install MySQL Workbench using Chocolatey
+	choco install mysql.workbench -y
+	
+	# Output installation completed message
+	Write-Host "MySQL Workbench installation completed."
 }
