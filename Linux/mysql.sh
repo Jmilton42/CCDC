@@ -8,42 +8,6 @@ read -s pass
 
 pkg=$(which apt || which yum || which pacman || which apk || which zypper || which dnf)
 
-if [ -z "$(dpkg -l | grep mysql)" ]; then
-	echo "MySQL is not installed, installing it now."
-
-	if [[ -z "$pkg" ]]; then
-	    echo "[-] Could not find a package manager. Run pspy manually"
-	fi
-	
-	case $pkg in
-	    *apt*)
-	        apt install -y mysql-server
-	        ;;
-	    *yum*)
-	        yum install -y mysql-server
-	        ;;
-	    *pacman*)
-	        pacman -S --noconfirm mariadb
-	        ;;
-	    *apk*)
-	        apk add mariadb-server
-	        ;;
-	    *zypper*)
-	        zypper install -y mariadb
-	        ;;
-	    *dnf*)
-	        dnf install -y mariadb-server
-	        ;;
-	    *)
-	        echo "[-] Could not find a package manager. Run pspy manually"
-	        ;;
-	esac
-	
-else
-	version=$(mysql --version | awk '{print $5}') 
-	echo "MySQL is already installed, the version is $version."
-fi
-
 DUMP_DIR="/root/backups/sql"
 
 mkdir -p "$DUMP_DIR"
