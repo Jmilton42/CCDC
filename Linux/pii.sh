@@ -51,6 +51,10 @@ search /home
 echo "[+] Searching /var/www for PII."
 search /var/www
 
+# looking in the backup file with all DB info ( /root/backups/sql/all_databases.sql )
+echo "[+] Searching DB backup file for PII."
+search /root/backups/sql/all_databases.sql
+
 # if there is vsftpd installed, look in the anon_root and local_root directories
 if [ -f /etc/vsftpd.conf ]; then
     echo "[+] VSFTPD config file found. Checking for anon_root and local_root directories."
