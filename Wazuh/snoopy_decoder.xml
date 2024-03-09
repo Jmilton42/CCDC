@@ -1,0 +1,35 @@
+<decoder name="snoopy">
+        <program_name>snoopy</program_name>
+</decoder>
+
+<decoder name="snoopy_child">
+        <parent>snoopy</parent>
+        <regex type="PCRE2">\[(uid:([^\s]+)|login:([^\s]+))\s.*</regex>
+        <order>uid_or_login</order>
+</decoder>
+<decoder name="snoopy_child">
+        <parent>snoopy</parent>
+        <regex type="PCRE2">ssh:\(([\d\.]+\s[\d\.]+\s[\d\.]+\s[\d\.]+)\)</regex>
+        <order>ssh</order>
+</decoder>
+
+<decoder name="snoopy_child">
+        <parent>snoopy</parent>
+        <regex type="PCRE2">tty:(\S+)</regex>
+        <order>tty</order>
+</decoder>
+<decoder name="snoopy_child">
+        <parent>snoopy</parent>
+        <regex type="PCRE2">uid:(\S+)</regex>
+        <order>uid</order>
+</decoder>
+<decoder name="snoopy_child">
+        <parent>snoopy</parent>
+        <regex type="PCRE2">filename(\S+)\]|cwd:(\S+)\]</regex>
+        <order>Filename_or_cwd</order>
+</decoder>
+<decoder name="snoopy_child">
+        <parent>snoopy</parent>
+        <regex type="PCRE2">\]:\s(.*)$</regex>
+        <order>cmd</order>
+</decoder>

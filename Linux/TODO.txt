@@ -1,8 +1,0 @@
-users.sh - change passwords reading a csv, set rbash (need to do debian, fedora, bsd, solaris)
-backup.sh - backup important files we will be changing
-baselines.sh - create baselines for the image
-inventory.sh - create an inventory file for each system
-pii.sh - search for pii on the system
-webshell.sh - search for webshells
-sqldump.sh - dump mysql
-ssh.sh - secure ssh automatically

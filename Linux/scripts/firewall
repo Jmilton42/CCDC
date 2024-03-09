@@ -1,0 +1,62 @@
+#!/bin/bash
+pkg=$(which apt||which yum||which zypper||which dnf||which pkg)
+
+case $pkg in
+    *apt*)
+        apt install -y ufw
+        ufw reset
+        ufw disable
+        ufw default deny incoming
+        ufw default deny outgoing
+		ufw delete allow in SSH
+        ufw allow in from 0.0.0.0 to any port 00
+        ufw allow 00/tcp
+        ufw allow 00
+        ufw allow 00:10/tcp
+        ufw allow out to any port 80
+        ufw allow out to any port 443
+        ufw allow out to any port 53
+        ufw allow out to 0.0.0.0 port 00
+        ufw enable
+        ;;
+    *yum*)
+        yum install epel-release -y
+        yum install ufw -y
+        ufw reset
+        ufw disable
+        ufw default deny incoming
+        ufw default deny outgoing
+		ufw delete allow in SSH
+        ufw allow in from 0.0.0.0 to any port 00
+        ufw allow 00/tcp
+        ufw allow 00
+        ufw allow 00:10/tcp
+        ufw allow out to any port 80
+        ufw allow out to any port 443
+        ufw allow out to any port 53
+        ufw allow out to 0.0.0.0 port 00
+        ufw enable
+        ;;
+    *zypper*)
+        zypper install firewalld -y
+        systemctl enable firewalld
+        systemctl start firewalld
+        # Default deny all traffic on eth0
+        firewall-cmd --permanent --zone=drop --change-interface=eth0
+        firewall-cmd --permanent --set-default-zone=drop
+        firewall-cmd --permanent --new-zone=service
+        firewall-cmd --permanent --zone=service --add-port=00
+        firewall-cmd --permanent --zone=service --add-source=0.0.0.0
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p tcp -m tcp --dport 80 -j ACCEPT
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p tcp -m tcp --dport 443 -j ACCEPT
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p tcp -m tcp --dport 53 -j ACCEPT
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp --dport 53 -j ACCEPT
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -d 10.100.18.0/24 -j ACCEPT
+        firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 2 -j DROP
+        firewall-cmd --reload
+        ;;
+    *)
+        echo "No package manager found"
+        ;;
+esac

@@ -1,0 +1,25 @@
+{
+    "hosts": [
+        {
+            "ip": "",
+            "username": "",
+            "password": "",
+            "isroot": false
+        }
+    ],
+    "timeout": 10,
+    "scripts": [
+        "loader.sh",
+        "inventory.sh",
+        "backup.sh",
+        "persistence.sh",
+        "profiles.sh",
+        "ssh.sh",
+        "pwchange.sh",
+        "logging.sh",
+        "sudoers.sh"
+    ],
+    "chmod": "chmod +x",
+    "sudo": "echo '%PASSWORD%' | sudo -S"
+}
+
